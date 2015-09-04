@@ -17,9 +17,7 @@ class Pagerduty < Sensu::Handler
     @event['client']['name'] + '/' + @event['check']['name']
   end
 
-  # Create the pagerduty alert and ship it
-  # @example Set the notification type to CRITICAL
-  #   "handle" #=> "A well-formed call to pagerduty"
+   pagerduty"
   # @return [integer] exit code
   def handle
     description = @event['check']['notification']
