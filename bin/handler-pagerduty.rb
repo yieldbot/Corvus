@@ -4,15 +4,7 @@ require 'sensu-handler'
 require 'redphone/pagerduty'
 
 class Pagerduty < Sensu::Handler
-  # Acquires the mail settings from a json file dropped via Chef
-  #
-  # These settings will set who the mail should be set to along with any
-  # necessary snmtp settings.  All can be overridden in the local Vagrantfile
-  #
-  # @example Get a setting
-  #   "acquire_setting('alert_prefix')" #=> "go away"
-  # @param name [string] the alert heading
-  # @return [string] the configuration string
+
   def acquire_setting(name)
     product = ARGV[0]
     settings[product][name]
