@@ -10,18 +10,32 @@ class Pagerduty < Sensu::Handler
     settings[product][name]
   end
 
+  def acquire_monitored_instance
+    @event['client']['name']
+  end
+
   # Create an incident key
   #
   #
   def incident_key
-    @event['client']['name'] + '/' + @event['check']['name']
+    acquire_monitored_instance + '/' + @event['check']['name']
   end
 
-   pagerduty"
+  def check_data
+    @event
+  end
+
+  def clean_output
+    @event['check']['output'].partition(':')[0]
+  end
+
+  # Create the pagerduty alert and ship it
+  # @example Set the notification type to CRITICAL
+  #   "handle" #=> "A well-formed call to pagerduty"
   # @return [integer] exit code
   def handle
     description = @event['check']['notification']
-    description ||= [@event['client']['name'], @event['check']['name'], @event['check']['output']].join(' : ')
+    description ||= [acquire_monitored_instance, @event['check']['name'], clean_output].join(' : ')
     begin
       timeout(10) do
         response = case @event['action']
@@ -30,7 +44,7 @@ class Pagerduty < Sensu::Handler
                        service_key: acquire_setting('api_key'),
                        incident_key: incident_key,
                        description: description,
-                       details: @event
+                       details: check_data
                      )
                    when 'resolve'
                      Redphone::Pagerduty.resolve_incident(
