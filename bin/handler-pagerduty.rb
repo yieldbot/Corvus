@@ -4,7 +4,6 @@ require 'sensu-handler'
 require 'redphone/pagerduty'
 
 class Pagerduty < Sensu::Handler
-
   def acquire_setting(name)
     product = ARGV[0]
     settings[product][name]
@@ -34,7 +33,6 @@ class Pagerduty < Sensu::Handler
   #   "handle" #=> "A well-formed call to pagerduty"
   # @return [integer] exit code
   def handle
-    description = @event['check']['notification']
     description ||= [acquire_monitored_instance, @event['check']['name'], clean_output].join(' : ')
     begin
       timeout(10) do
