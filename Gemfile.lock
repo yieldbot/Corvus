@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    corvus (0.0.9)
+    corvus (0.0.10)
       sensu-plugin (~> 1.2)
 
 GEM
